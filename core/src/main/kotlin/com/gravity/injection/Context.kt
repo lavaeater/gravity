@@ -48,7 +48,7 @@ object Context {
             addSystem(SpeedSystem())
             addSystem(TransformSystem())
             addSystem(RenderSystem())
-            addSystem(CameraFattieSystem())
+            addSystem(CameraFollowAnEntitySystem())
             addSystem(PlanetKiller())
         }
     }

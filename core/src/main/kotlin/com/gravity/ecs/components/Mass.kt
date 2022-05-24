@@ -11,7 +11,7 @@ class Mass : Component, Pool.Poolable {
     var normValue = 0f
     var mass = 1f
         set(value) {
-            normValue = MathUtils.norm(MIN_MASS, MAX_MASS, value)
+            normValue = MathUtils.norm(MIN_MASS, MAX_MASS * 10f, value)
             color = com.badlogic.gdx.graphics.Color(normValue, normValue / 2f, normValue / 3f, 1f)
             field = value
         }

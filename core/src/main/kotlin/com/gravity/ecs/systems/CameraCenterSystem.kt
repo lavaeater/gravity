@@ -14,6 +14,42 @@ import ktx.ashley.allOf
 import ktx.ashley.mapperFor
 import ktx.math.vec2
 
+class CameraFollowAnEntitySystem: EntitySystem() {
+    val allFamily = allOf(Transform::class, Mass::class).get()
+    val massMapper = mapperFor<Mass>()
+    val allEntities get() = engine.getEntitiesFor(allFamily).sortedByDescending { massMapper.get(it).mass }
+    val transMapper = mapperFor<Transform>()
+    lateinit var selectedEntity : Entity
+    private val camera by lazy { inject<OrthographicCamera>() }
+    private val viewPort by lazy { inject<ExtendViewport>() }
+
+    var selectedEntityIndex = 0
+        set(value) {
+            var actualValue = value
+            if(actualValue > allEntities.size - 1)
+                actualValue = 0
+            if(actualValue < 0)
+                actualValue = allEntities.size - 1
+
+            selectedEntity = allEntities[actualValue]
+            field = actualValue
+        }
+
+    override fun update(deltaTime: Float) {
+        if(!::selectedEntity.isInitialized && allEntities.any()) {
+            selectedEntity = allEntities.first()
+        }
+
+        if(::selectedEntity.isInitialized) {
+            val pos = transMapper.get(selectedEntity).position
+            camera.position.set(pos.x / 10f, pos.y / 10f, 0f)
+
+            viewPort.update(Gdx.graphics.width, Gdx.graphics.height)
+            camera.update(true)
+        }
+    }
+}
+
 class CameraFattieSystem: IteratingSystem(allOf(Mass::class, Transform::class).get()) {
     private val camera by lazy { inject<OrthographicCamera>() }
     private val viewPort by lazy { inject<ExtendViewport>() }
