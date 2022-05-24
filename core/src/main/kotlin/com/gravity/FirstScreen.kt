@@ -68,9 +68,9 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
          */
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
-        val velRange = -100f..100f
+        val velRange = -50f..50f
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..2000) {
+        for (i in 0..1000) {
             engine.entity {
                 with<Mass> {
                     mass = massRange.random()
