@@ -27,8 +27,8 @@ class FirstScreen : KtxScreen {
         /*
         add some entities, my man!
          */
-        val xRange = -15000f..15000f
-        val yRange = -10000f..10000f
+        val xRange = -150000f..150000f
+        val yRange = -100000f..100000f
         val massRange = MIN_MASS..MAX_MASS
         for(i in 0..100) {
             engine.entity {
@@ -36,11 +36,11 @@ class FirstScreen : KtxScreen {
                     mass = massRange.random()
                 }
                 with<Transform> {
-                    position.set(xRange.random(), 0f)
+                    position.set(xRange.random(), yRange.random())
                 }
                 with<Acceleration>()
                 with<Velocity> {
-                    v.set(0f, 10f)
+                    v.set(0f, 0f)
                 }
             }
         }
