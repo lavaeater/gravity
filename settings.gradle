@@ -1,1 +1,1 @@
-include 'ios', 'server', 'core', 'lwjgl3', 'shared'
+include 'android', 'ios', 'server', 'core', 'lwjgl3', 'shared'
