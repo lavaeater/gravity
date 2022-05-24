@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.gravity.ecs.components.Mass
 import com.gravity.ecs.components.Transform
 import com.gravity.injection.Context
+import com.gravity.injection.GameConstants
 import ktx.ashley.allOf
 import ktx.ashley.mapperFor
 import ktx.math.div
@@ -39,7 +40,7 @@ class CameraFollowAnEntitySystem: EntitySystem() {
         }
 
         if(::selectedEntity.isInitialized) {
-            val pos = transMapper.get(selectedEntity).position / 10f
+            val pos = transMapper.get(selectedEntity).position / GameConstants.drawScale
             camera.position.set(pos.x, pos.y, 0f)
 
             viewPort.update(Gdx.graphics.width, Gdx.graphics.height)
