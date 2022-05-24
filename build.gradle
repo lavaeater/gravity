@@ -31,7 +31,7 @@ allprojects {
 	apply plugin: 'idea'
 }
 
-configure(subprojects - project(':android')) {
+configure(subprojects) {
 	apply plugin: 'java-library'
 	apply plugin: 'kotlin'
 	sourceCompatibility = 1.8
