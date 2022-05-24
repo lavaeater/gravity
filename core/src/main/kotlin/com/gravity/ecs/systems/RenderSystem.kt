@@ -14,6 +14,9 @@ import com.gravity.injection.Context.inject
 import ktx.ashley.allOf
 import ktx.ashley.mapperFor
 import ktx.graphics.use
+import ktx.math.div
+import ktx.math.plus
+import ktx.math.times
 
 class RenderSystem : IteratingSystem(allOf(Transform::class, Mass::class).get()) {
     private val shapeDrawer by lazy { Assets.shapeDrawer }
@@ -35,8 +38,9 @@ class RenderSystem : IteratingSystem(allOf(Transform::class, Mass::class).get())
         val velocity = speedMapper.get(entity)
         val position = transMapper.get(entity).position
         shapeDrawer.setColor(mass.color)
-        shapeDrawer.filledCircle(transMapper.get(entity).position, MathUtils.clamp(mass.mass / 1000f, 100f, 1000f))
-        shapeDrawer.line(position, position.cpy().add(acc.a.cpy().scl(10f)), Color.BLUE, 10f)
-        shapeDrawer.line(position, position.cpy().add(velocity.v.cpy().scl(10f)), Color.RED, 10f)
+        val scaledPosition = position / 10f
+        shapeDrawer.filledCircle(scaledPosition, MathUtils.clamp(mass.mass / 1000f, 100f, 1000f))
+        shapeDrawer.line(scaledPosition, scaledPosition + acc.a * 10f, Color.BLUE, 10f)
+        shapeDrawer.line(scaledPosition, scaledPosition + velocity.v * 10f, Color.RED, 10f)
     }
 }
