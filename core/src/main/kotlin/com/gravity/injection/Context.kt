@@ -6,19 +6,12 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.utils.viewport.ExtendViewport
-import com.gravity.ecs.systems.GravitySystem
-import com.gravity.ecs.systems.RenderSystem
-import com.gravity.ecs.systems.SpeedSystem
+import com.gravity.ecs.systems.*
 import com.gravity.injection.GameConstants.GAME_HEIGHT
 import com.gravity.injection.GameConstants.GAME_WIDTH
 import ktx.inject.Context
 import ktx.inject.register
 
-
-object GameConstants {
-    const val GAME_HEIGHT = 100f
-    const val GAME_WIDTH = 100f
-}
 
 object Context {
     val context = Context()
@@ -53,7 +46,10 @@ object Context {
         return PooledEngine().apply {
             addSystem(GravitySystem())
             addSystem(SpeedSystem())
+            addSystem(TransformSystem())
             addSystem(RenderSystem())
+            addSystem(CameraFattieSystem())
+            addSystem(PlanetKiller())
         }
     }
 }
