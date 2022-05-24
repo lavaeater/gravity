@@ -30,7 +30,7 @@ class FirstScreen : KtxScreen {
         val xRange = -15000f..15000f
         val yRange = -10000f..10000f
         val massRange = MIN_MASS..MAX_MASS
-        for(i in 0..1000) {
+        for(i in 0..100) {
             engine.entity {
                 with<Mass> {
                     mass = massRange.random()
