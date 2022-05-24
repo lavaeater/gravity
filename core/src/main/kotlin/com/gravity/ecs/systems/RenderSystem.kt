@@ -39,8 +39,8 @@ class RenderSystem : IteratingSystem(allOf(Transform::class, Mass::class).get())
         val position = transMapper.get(entity).position
         shapeDrawer.setColor(mass.color)
         val scaledPosition = position / 10f
-        shapeDrawer.filledCircle(scaledPosition, MathUtils.clamp(mass.mass / 1000f, 100f, 1000f))
-        shapeDrawer.line(scaledPosition, scaledPosition + acc.a * 10f, Color.BLUE, 10f)
-        shapeDrawer.line(scaledPosition, scaledPosition + velocity.v * 10f, Color.RED, 10f)
+        shapeDrawer.filledCircle(scaledPosition, MathUtils.clamp(mass.mass / 1000f, 10f, 1000f))
+//        shapeDrawer.line(scaledPosition, scaledPosition + acc.a * 10f, Color.BLUE, 10f)
+//        shapeDrawer.line(scaledPosition, scaledPosition + velocity.v * 10f, Color.RED, 10f)
     }
 }

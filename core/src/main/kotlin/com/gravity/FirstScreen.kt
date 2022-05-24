@@ -9,6 +9,7 @@ import com.gravity.ecs.components.Acceleration
 import com.gravity.ecs.components.Mass
 import com.gravity.ecs.components.Transform
 import com.gravity.ecs.components.Velocity
+import com.gravity.ecs.systems.CameraFollowAnEntitySystem
 import com.gravity.injection.Context.inject
 import com.gravity.injection.GameConstants.MAX_MASS
 import com.gravity.injection.GameConstants.MIN_MASS
@@ -16,6 +17,7 @@ import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.ashley.entity
+import ktx.ashley.getSystem
 import ktx.ashley.with
 import ktx.math.random
 
@@ -25,6 +27,7 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
     private val viewPort by lazy { inject<ExtendViewport>() }
     private var cameraZoom = 0f
     private val zoomFactor = 0.05f
+    private val followSystem by lazy { engine.getSystem<CameraFollowAnEntitySystem>() }
 
 
     override fun keyDown(keycode: Int): Boolean {
@@ -53,6 +56,14 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 cameraZoom = 0f
                 true
             }
+            Input.Keys.LEFT -> {
+                followSystem.selectedEntityIndex -= 1
+                true
+            }
+            Input.Keys.RIGHT -> {
+                followSystem.selectedEntityIndex += 1
+                true
+            }
             else -> {
                 false
             }
@@ -69,8 +80,8 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
         val velRange = -50f..50f
-        val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..1000) {
+        val massRange = (MIN_MASS)..(MAX_MASS * 10f)
+        for (i in 0..300) {
             engine.entity {
                 with<Mass> {
                     mass = massRange.random()
