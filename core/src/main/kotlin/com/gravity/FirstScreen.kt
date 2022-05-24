@@ -21,6 +21,7 @@ import ktx.ashley.with
 import ktx.math.random
 
 class FirstScreen : KtxScreen, KtxInputAdapter {
+    private val addBigOnes = true
     private val engine by lazy { inject<Engine>() }
     private val camera by lazy { inject<OrthographicCamera>() }
     private val viewPort by lazy { inject<ExtendViewport>() }
@@ -30,7 +31,7 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
     private val drawScaleFactor = 1f
     private var drawScale = 0f
 
-    private val planetScaleFactor = 100f
+    private val planetScaleFactor = 10f
     private var planetScale = 0f
     private val followSystem by lazy { engine.getSystem<CameraFollowAnEntitySystem>() }
 
@@ -121,7 +122,7 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         val yRange = -100000f..100000f
         val velRange = 250f..750f
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..500) {
+        for (i in 0..750) {
             val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
 
             val uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
@@ -143,44 +144,46 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
             }
         }
 
-        var p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
-        var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
+        if(addBigOnes) {
+            var p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
+            var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
 
-        engine.entity {
-            with<Mass> {
-                mass = MAX_MASS / 3f
+            engine.entity {
+                with<Mass> {
+                    mass = MAX_MASS / 3f
+                }
+                with<Transform> {
+                    position.set(p)
+                }
+                with<Acceleration>()
+                with<Velocity> {
+                    v.set(uV)
+                }
             }
-            with<Transform> {
-                position.set(p)
+            p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
+            uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
+            engine.entity {
+                with<Mass> {
+                    mass = MAX_MASS / 2f
+                }
+                with<Transform> {
+                    position.set(p)
+                }
+                with<Acceleration>()
+                with<Velocity> {
+                    v.set(uV)
+                }
             }
-            with<Acceleration>()
-            with<Velocity> {
-                v.set(uV)
+            engine.entity {
+                with<Mass> {
+                    mass = MAX_MASS * 10000f
+                }
+                with<Transform> {
+                    position.set(0f, 0f)
+                }
+                with<Acceleration>()
+                with<Velocity>()
             }
-        }
-        p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
-        uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
-        engine.entity {
-            with<Mass> {
-                mass = MAX_MASS / 2f
-            }
-            with<Transform> {
-                position.set(p)
-            }
-            with<Acceleration>()
-            with<Velocity> {
-                v.set(uV)
-            }
-        }
-        engine.entity {
-            with<Mass> {
-                mass = MAX_MASS * 10000f
-            }
-            with<Transform> {
-                position.set(0f,0f)
-            }
-            with<Acceleration>()
-            with<Velocity>()
         }
         camera.position.set(0f, 0f, 0f)
     }

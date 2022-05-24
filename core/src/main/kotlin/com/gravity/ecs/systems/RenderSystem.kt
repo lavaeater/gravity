@@ -57,7 +57,7 @@ class RenderSystem : IteratingSystem(allOf(Transform::class, Mass::class).get())
 //                        prevIndex = 0
 //                    }
 //
-//                    shapeDrawer.line(t.points[index] / 10f, t.points[prevIndex] / 10f, trailColor, 10f)
+//                    shapeDrawer.line(t.points[index] / GameConstants.drawScale, t.points[prevIndex] / GameConstants.drawScale, trailColor, 5 * GameConstants.drawScale)
 //                }
 //            }
 //        }
