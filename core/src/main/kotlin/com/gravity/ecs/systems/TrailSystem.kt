@@ -7,7 +7,7 @@ import com.gravity.ecs.components.Transform
 import ktx.ashley.allOf
 import ktx.ashley.mapperFor
 
-class PointSystem: IteratingSystem(allOf(Transform::class, Trail::class).get()) {
+class TrailSystem: IteratingSystem(allOf(Transform::class, Trail::class).get()) {
     private val trailMapper = mapperFor<Trail>()
     private val transMapper = mapperFor<Transform>()
     override fun processEntity(entity: Entity, deltaTime: Float) {

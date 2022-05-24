@@ -10,6 +10,7 @@ import com.gravity.ecs.components.Transform
 import com.gravity.injection.Context
 import ktx.ashley.allOf
 import ktx.ashley.mapperFor
+import ktx.math.div
 
 class CameraFollowAnEntitySystem: EntitySystem() {
     val allFamily = allOf(Transform::class, Mass::class).get()
@@ -38,8 +39,8 @@ class CameraFollowAnEntitySystem: EntitySystem() {
         }
 
         if(::selectedEntity.isInitialized) {
-            val pos = transMapper.get(selectedEntity).position
-            camera.position.set(pos.x / 10f, pos.y / 10f, 0f)
+            val pos = transMapper.get(selectedEntity).position / 10f
+            camera.position.set(pos.x, pos.y, 0f)
 
             viewPort.update(Gdx.graphics.width, Gdx.graphics.height)
             camera.update(true)

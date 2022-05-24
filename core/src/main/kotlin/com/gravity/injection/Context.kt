@@ -45,12 +45,12 @@ object Context {
     private fun getEngine(): Engine {
         return PooledEngine().apply {
             addSystem(GravitySystem())
-            addSystem(PointSystem())
+//            addSystem(TrailSystem())
             addSystem(SpeedSystem())
             addSystem(TransformSystem())
             addSystem(RenderSystem())
             addSystem(CameraFollowAnEntitySystem())
-            addSystem(PlanetKiller())
+            //addSystem(PlanetKiller())
         }
     }
 }

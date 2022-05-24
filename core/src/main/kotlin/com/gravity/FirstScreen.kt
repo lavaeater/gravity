@@ -4,10 +4,12 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.gravity.ecs.components.*
 import com.gravity.ecs.systems.CameraFollowAnEntitySystem
 import com.gravity.injection.Context.inject
+import com.gravity.injection.GameConstants
 import com.gravity.injection.GameConstants.MAX_MASS
 import com.gravity.injection.GameConstants.MIN_MASS
 import ktx.app.KtxInputAdapter
@@ -17,7 +19,6 @@ import ktx.ashley.entity
 import ktx.ashley.getSystem
 import ktx.ashley.with
 import ktx.math.random
-import ktx.math.vec2
 
 class FirstScreen : KtxScreen, KtxInputAdapter {
     private val engine by lazy { inject<Engine>() }
@@ -25,6 +26,12 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
     private val viewPort by lazy { inject<ExtendViewport>() }
     private var cameraZoom = 0f
     private val zoomFactor = 0.05f
+
+    private val drawScaleFactor = 1f
+    private var drawScale = 0f
+
+    private val planetScaleFactor = 100f
+    private var planetScale = 0f
     private val followSystem by lazy { engine.getSystem<CameraFollowAnEntitySystem>() }
 
 
@@ -36,6 +43,22 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
             }
             Input.Keys.X -> {
                 cameraZoom = -1f
+                true
+            }
+            Input.Keys.UP -> {
+                drawScale = 1f
+                true
+            }
+            Input.Keys.DOWN -> {
+                drawScale = -1f
+                true
+            }
+            Input.Keys.W -> {
+                planetScale = 1f
+                true
+            }
+            Input.Keys.S -> {
+                planetScale = -1f
                 true
             }
             else -> {
@@ -62,6 +85,22 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 followSystem.selectedEntityIndex += 1
                 true
             }
+            Input.Keys.UP -> {
+                drawScale = 0f
+                true
+            }
+            Input.Keys.DOWN -> {
+                drawScale = 0f
+                true
+            }
+            Input.Keys.W -> {
+                planetScale = 0f
+                true
+            }
+            Input.Keys.S -> {
+                planetScale = 0f
+                true
+            }
             else -> {
                 false
             }
@@ -75,12 +114,18 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         /*
         add some entities, my man!
          */
+        val distanceRange = 1000f..100000f
+        val angleRange = 0f..359f
+
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
-        val velRange = -50f..50f
-        val massRange = (MIN_MASS)..(MAX_MASS * 10f)
-        for (i in 0..1000) {
-            val p = vec2(xRange.random(), yRange.random())
+        val velRange = 250f..750f
+        val massRange = MIN_MASS..MAX_MASS
+        for (i in 0..500) {
+            val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
+
+            val uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
+
             engine.entity {
                 with<Mass> {
                     mass = massRange.random()
@@ -90,39 +135,49 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 }
                 with<Acceleration>()
                 with<Velocity> {
-                    v.set(velRange.random(), velRange.random())
+                    v.set(uV)
                 }
                 with<Trail> {
                     points.forEach { it.set(p) }
                 }
             }
         }
+
+        var p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
+        var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
+
         engine.entity {
             with<Mass> {
                 mass = MAX_MASS / 3f
             }
             with<Transform> {
-                position.set(-10000f, -10000f)
+                position.set(p)
             }
             with<Acceleration>()
-            with<Velocity>()
+            with<Velocity> {
+                v.set(uV)
+            }
         }
+        p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
+        uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
         engine.entity {
             with<Mass> {
                 mass = MAX_MASS / 2f
             }
             with<Transform> {
-                position.set(10000f, 10000f)
+                position.set(p)
             }
             with<Acceleration>()
-            with<Velocity>()
+            with<Velocity> {
+                v.set(uV)
+            }
         }
         engine.entity {
             with<Mass> {
-                mass = MAX_MASS * 100000f
+                mass = MAX_MASS * 10000f
             }
             with<Transform> {
-                position.set(0f, 0f)
+                position.set(0f,0f)
             }
             with<Acceleration>()
             with<Velocity>()
@@ -134,6 +189,8 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         clearScreen(red = 0.7f, green = 0.7f, blue = 0.7f)
         engine.update(delta)
         camera.zoom += zoomFactor * cameraZoom
+        GameConstants.drawScale += drawScale * drawScaleFactor
+        GameConstants.planetScale += planetScale * planetScaleFactor
     }
 
     override fun dispose() {

@@ -8,7 +8,7 @@ class Trail: Component, Pool.Poolable {
     var framesCounter = 0
     val frameTarget = 5
     var currentPointIndex = 0
-    val points = Array(200) {
+    val points = Array(50) {
         vec2()
     }
     override fun reset() {
