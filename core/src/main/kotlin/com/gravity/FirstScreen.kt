@@ -5,10 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.viewport.ExtendViewport
-import com.gravity.ecs.components.Acceleration
-import com.gravity.ecs.components.Mass
-import com.gravity.ecs.components.Transform
-import com.gravity.ecs.components.Velocity
+import com.gravity.ecs.components.*
 import com.gravity.ecs.systems.CameraFollowAnEntitySystem
 import com.gravity.injection.Context.inject
 import com.gravity.injection.GameConstants.MAX_MASS
@@ -20,6 +17,7 @@ import ktx.ashley.entity
 import ktx.ashley.getSystem
 import ktx.ashley.with
 import ktx.math.random
+import ktx.math.vec2
 
 class FirstScreen : KtxScreen, KtxInputAdapter {
     private val engine by lazy { inject<Engine>() }
@@ -81,17 +79,21 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         val yRange = -100000f..100000f
         val velRange = -50f..50f
         val massRange = (MIN_MASS)..(MAX_MASS * 10f)
-        for (i in 0..300) {
+        for (i in 0..1000) {
+            val p = vec2(xRange.random(), yRange.random())
             engine.entity {
                 with<Mass> {
                     mass = massRange.random()
                 }
                 with<Transform> {
-                    position.set(xRange.random(), yRange.random())
+                    position.set(p)
                 }
                 with<Acceleration>()
                 with<Velocity> {
                     v.set(velRange.random(), velRange.random())
+                }
+                with<Trail> {
+                    points.forEach { it.set(p) }
                 }
             }
         }
@@ -117,7 +119,7 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         }
         engine.entity {
             with<Mass> {
-                mass = MAX_MASS * 10000f
+                mass = MAX_MASS * 100000f
             }
             with<Transform> {
                 position.set(0f, 0f)
