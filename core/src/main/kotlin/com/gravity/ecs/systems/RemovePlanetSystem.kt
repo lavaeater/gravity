@@ -9,7 +9,7 @@ import ktx.ashley.allOf
 import ktx.ashley.getSystem
 import ktx.ashley.mapperFor
 
-class PlanetKiller : IteratingSystem(allOf(Mass::class, Transform::class).get()) {
+class RemovePlanetSystem : IteratingSystem(allOf(Mass::class, Transform::class).get()) {
     private val transMapper = mapperFor<Transform>()
     private val massMapper = mapperFor<Mass>()
     private val heavyFamily = allOf(Mass::class).get()
@@ -25,5 +25,5 @@ class PlanetKiller : IteratingSystem(allOf(Mass::class, Transform::class).get())
             engine.removeEntity(entity)
         }
     }
-
 }
+

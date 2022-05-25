@@ -120,9 +120,9 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
 
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
-        val velRange = 5000000f..50000000f
+        val velRange = 25000000f..25000000f
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..50) {
+        for (i in 0..500) {
             val distance = distanceRange.random()
             val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
             val m = massRange.random()
@@ -138,6 +138,9 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 with<Acceleration>()
                 with<Velocity> {
                     v.set(uV)
+                }
+                with<Trail> {
+                    points.forEach { it.set(p) }
                 }
             }
         }
@@ -158,6 +161,9 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 with<Velocity> {
                     v.set(uV)
                 }
+                with<Trail> {
+                    points.forEach { it.set(p) }
+                }
             }
             distance = distanceRange.random()
             p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
@@ -172,6 +178,9 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 with<Acceleration>()
                 with<Velocity> {
                     v.set(uV)
+                }
+                with<Trail> {
+                    points.forEach { it.set(p) }
                 }
             }
             engine.entity {

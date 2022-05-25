@@ -48,9 +48,12 @@ object Context {
             addSystem(TrailSystem())
             addSystem(SpeedSystem())
             addSystem(TransformSystem())
-            addSystem(RenderSystem())
+            addSystem(CollisionSystem())
+            //addSystem(TrailRenderer())
+            addSystem(RenderSystem(false))
             addSystem(CameraFollowAnEntitySystem())
-            //addSystem(PlanetKiller())
+            addSystem(RemovePlanetSystem())
+            addSystem(RemoveSystem())
         }
     }
 }
