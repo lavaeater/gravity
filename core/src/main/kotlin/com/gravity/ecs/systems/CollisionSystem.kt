@@ -24,10 +24,10 @@ class CollisionSystem : IteratingSystem(allOf(Transform::class, Mass::class).get
                     val m1 = massMapper.get(e1)
                     val m2 = massMapper.get(e2)
                     if (distance < m1.radius + m2.radius) {
-                        val a1 = accMapper.get(e1)
-                        val a2 = accMapper.get(e2)
-                        val v1 = velMapper.get(e1)
-                        val v2 = velMapper.get(e2)
+                        val a1 = accMapper.get(e1)?.a
+                        val a2 = accMapper.get(e2)?.a
+                        val v1 = velMapper.get(e1)?.v
+                        val v2 = velMapper.get(e2)?.v
                         //COLLISSION!
                         val newEntity = engine.entity {
                             with<Mass> {
@@ -37,10 +37,12 @@ class CollisionSystem : IteratingSystem(allOf(Transform::class, Mass::class).get
                                 position.set(transMapper.get(e1).position)
                             }
                             with<Acceleration> {
-                                a.set((a1.a + a2.a) / 2f)
+                                if(a1 != null && a2 != null)
+                                    a.set((a1 + a2) / 2f)
                             }
                             with<Velocity> {
-                                v.set((v1.v + v2.v) / 2f)
+                                if(v1 != null && v2 != null)
+                                    v.set((v1 + v2) / 2f)
                             }
                             with<Trail>()
                         }

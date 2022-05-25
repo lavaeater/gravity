@@ -20,8 +20,7 @@ import ktx.ashley.getSystem
 import ktx.ashley.with
 import ktx.math.random
 
-class FirstScreen : KtxScreen, KtxInputAdapter {
-    private val addBigOnes = true
+class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter {
     private val engine by lazy { inject<Engine>() }
     private val camera by lazy { inject<OrthographicCamera>() }
     private val viewPort by lazy { inject<ExtendViewport>() }
@@ -33,7 +32,7 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
 
     private val planetScaleFactor = 10f
     private var planetScale = 0f
-    private val followSystem by lazy { engine.getSystem<CameraFollowAnEntitySystem>() }
+    private val fattyTracky by lazy { inject<KeepTrackOfFatties>() }
 
 
     override fun keyDown(keycode: Int): Boolean {
@@ -70,6 +69,10 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
 
     override fun keyUp(keycode: Int): Boolean {
         return when (keycode) {
+            Input.Keys.F -> {
+                fattyTracky.trackTheFattest()
+                true
+            }
             Input.Keys.Z -> {
                 cameraZoom = 0f
                 true
@@ -79,11 +82,11 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 true
             }
             Input.Keys.LEFT -> {
-                followSystem.selectedEntityIndex -= 1
+                fattyTracky.prev()
                 true
             }
             Input.Keys.RIGHT -> {
-                followSystem.selectedEntityIndex += 1
+                fattyTracky.next()
                 true
             }
             Input.Keys.UP -> {
@@ -115,14 +118,14 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         /*
         add some entities, my man!
          */
-        val distanceRange = 10000f..100000f
+        val distanceRange = 100000f..1000000f
         val angleRange = 0f..359f
 
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
-        val velRange = 25000000f..25000000f
+        val velRange = 0f..0f//25000000f..25000000f
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..500) {
+        for (i in 0..1500) {
             val distance = distanceRange.random()
             val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
             val m = massRange.random()
@@ -194,7 +197,7 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                 with<Velocity>()
             }
         }
-        camera.position.set(0f, 0f, 0f)
+        inject<KeepTrackOfFatties>().trackTheFattest()
     }
 
     override fun render(delta: Float) {

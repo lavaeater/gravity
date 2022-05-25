@@ -8,7 +8,7 @@ class MainGame : KtxGame<KtxScreen>() {
     override fun create() {
         KtxAsync.initiate()
 
-        addScreen(FirstScreen())
+        addScreen(FirstScreen(false))
         setScreen<FirstScreen>()
     }
 }

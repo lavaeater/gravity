@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.gravity.KeepTrackOfFatties
 import com.gravity.ecs.systems.*
 import com.gravity.injection.GameConstants.GAME_HEIGHT
 import com.gravity.injection.GameConstants.GAME_WIDTH
@@ -39,6 +40,7 @@ object Context {
                 )
             )
             bindSingleton(getEngine())
+            bindSingleton(KeepTrackOfFatties(inject()))
         }
     }
 
