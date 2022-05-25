@@ -45,7 +45,7 @@ object Context {
     private fun getEngine(): Engine {
         return PooledEngine().apply {
             addSystem(GravitySystem())
-//            addSystem(TrailSystem())
+            addSystem(TrailSystem())
             addSystem(SpeedSystem())
             addSystem(TransformSystem())
             addSystem(RenderSystem())

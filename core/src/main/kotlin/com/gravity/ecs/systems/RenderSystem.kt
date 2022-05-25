@@ -42,25 +42,25 @@ class RenderSystem : IteratingSystem(allOf(Transform::class, Mass::class).get())
         val position = transMapper.get(entity).position
         shapeDrawer.setColor(mass.color)
         val scaledPosition = position / GameConstants.drawScale
-//        if(trailMapper.has(entity)) {
-//            val t = trailMapper.get(entity)
-//            var index = t.currentPointIndex
-//            var prevIndex = 0
-//            for (i in 0 until t.points.size) {
-//                if(i < t.points.size -1) {
-//                    index += i
-//                    prevIndex = index + 1
-//                    if (index >= t.points.size) {
-//                        index = 0
-//                    }
-//                    if (prevIndex >= t.points.size) {
-//                        prevIndex = 0
-//                    }
-//
-//                    shapeDrawer.line(t.points[index] / GameConstants.drawScale, t.points[prevIndex] / GameConstants.drawScale, trailColor, 5 * GameConstants.drawScale)
-//                }
-//            }
-//        }
+        if(trailMapper.has(entity)) {
+            val t = trailMapper.get(entity)
+            var index = t.currentPointIndex
+            var prevIndex = 0
+            for (i in 0 until t.points.size) {
+                if(i < t.points.size -1) {
+                    index += i
+                    prevIndex = index + 1
+                    if (index >= t.points.size) {
+                        index = 0
+                    }
+                    if (prevIndex >= t.points.size) {
+                        prevIndex = 0
+                    }
+
+                    shapeDrawer.line(t.points[index] / GameConstants.drawScale, t.points[prevIndex] / GameConstants.drawScale, trailColor, 5 * GameConstants.drawScale)
+                }
+            }
+        }
         shapeDrawer.filledCircle(scaledPosition, MathUtils.norm(MIN_MASS, MAX_MASS, MathUtils.clamp(mass.mass, MIN_MASS, MAX_MASS)) * GameConstants.planetScale)
 //        shapeDrawer.line(scaledPosition, scaledPosition + acc.a * 10f, Color.BLUE, 10f)
 //        shapeDrawer.line(scaledPosition, scaledPosition + velocity.v * 10f, Color.RED, 10f)
