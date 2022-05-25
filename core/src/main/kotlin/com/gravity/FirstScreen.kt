@@ -123,7 +123,7 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
 
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
-        val velRange = 25000000f..30000000f
+        val velRange = 30000000f..50000000f
         val massRange = MIN_MASS..MAX_MASS
         for (i in 0..750) {
             val distance = distanceRange.random()
@@ -188,7 +188,7 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
             }
             engine.entity {
                 with<Mass> {
-                    mass = MAX_MASS * 10000f
+                    mass = MAX_MASS * 100000f
                 }
                 with<Transform> {
                     position.set(0f, 0f)
