@@ -123,9 +123,9 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
 
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
-        val velRange = 0f..0f//25000000f..25000000f
+        val velRange = 25000000f..30000000f
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..1500) {
+        for (i in 0..750) {
             val distance = distanceRange.random()
             val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
             val m = massRange.random()
@@ -151,7 +151,7 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
         if(addBigOnes) {
             var distance = distanceRange.random()
             var p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
-            var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * 25000000f)
+            var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * velRange.random())
 
             engine.entity {
                 with<Mass> {
@@ -170,7 +170,7 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
             }
             distance = distanceRange.random()
             p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
-            uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * 25000000f)
+            uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * velRange.random())
             engine.entity {
                 with<Mass> {
                     mass = MAX_MASS / 2f
