@@ -115,21 +115,22 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         /*
         add some entities, my man!
          */
-        val distanceRange = 1000f..100000f
+        val distanceRange = 10000f..100000f
         val angleRange = 0f..359f
 
         val xRange = -150000f..150000f
         val yRange = -100000f..100000f
         val velRange = 250f..750f
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..750) {
-            val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
-
-            val uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
+        for (i in 0..15) {
+            val distance = distanceRange.random()
+            val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
+            val m = massRange.random()
+            val uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * 25000000f)
 
             engine.entity {
                 with<Mass> {
-                    mass = massRange.random()
+                    mass = m
                 }
                 with<Transform> {
                     position.set(p)
@@ -145,8 +146,9 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
         }
 
         if(addBigOnes) {
-            var p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
-            var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
+            var distance = distanceRange.random()
+            var p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
+            var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * 25000000f)
 
             engine.entity {
                 with<Mass> {
@@ -160,8 +162,9 @@ class FirstScreen : KtxScreen, KtxInputAdapter {
                     v.set(uV)
                 }
             }
-            p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distanceRange.random())
-            uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl(velRange.random())
+            distance = distanceRange.random()
+            p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
+            uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * 25000000f)
             engine.entity {
                 with<Mass> {
                     mass = MAX_MASS / 2f
