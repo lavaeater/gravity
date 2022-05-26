@@ -12,6 +12,7 @@ import com.gravity.injection.GameConstants
 import com.gravity.injection.GameConstants.MAX_MASS
 import com.gravity.injection.GameConstants.MIN_MASS
 import com.gravity.injection.GameConstants.drawScale
+import com.gravity.injection.GameConstants.planetScale
 import ktx.ashley.allOf
 import ktx.ashley.mapperFor
 import ktx.graphics.use
@@ -19,7 +20,7 @@ import ktx.math.div
 import ktx.math.plus
 import ktx.math.times
 
-class RenderSystem(val drawVectors: Boolean) : IteratingSystem(allOf(Transform::class, Mass::class).get()) {
+class RenderSystem(private val drawVectors: Boolean) : IteratingSystem(allOf(Transform::class, Mass::class).get()) {
 
     private val shapeDrawer by lazy { Assets.shapeDrawer }
     private val transMapper = mapperFor<Transform>()
@@ -38,8 +39,8 @@ class RenderSystem(val drawVectors: Boolean) : IteratingSystem(allOf(Transform::
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val mass = massMapper.get(entity)
-        val acc = accMapper.get(entity)
-        val velocity = speedMapper.get(entity)
+        val acc: Acceleration? = accMapper.get(entity)
+        val velocity: Velocity? = speedMapper.get(entity)
         val position = transMapper.get(entity).position
         val hasRemove = removeMapper.has(entity)
         shapeDrawer.setColor(if(hasRemove) Color.WHITE else mass.color)
@@ -47,12 +48,12 @@ class RenderSystem(val drawVectors: Boolean) : IteratingSystem(allOf(Transform::
 
         shapeDrawer.filledCircle(
             scaledPosition,
-            MathUtils.norm(MIN_MASS, MAX_MASS, MathUtils.clamp(mass.mass, MIN_MASS, MAX_MASS)) * GameConstants.planetScale
+            MathUtils.norm(MIN_MASS, MAX_MASS, MathUtils.clamp(mass.mass, MIN_MASS, MAX_MASS)) * planetScale
         )
 
         if(drawVectors) {
-            shapeDrawer.line(scaledPosition, scaledPosition + acc.a * drawScale / 10f, Color.BLUE, 10f * drawScale)
-            shapeDrawer.line(scaledPosition, scaledPosition + velocity.v * drawScale / 10f, Color.RED, 10f * drawScale)
+            if(acc != null) shapeDrawer.line(scaledPosition, scaledPosition + acc.a * drawScale / 10f, Color.BLUE, 10f * planetScale)
+            if(velocity != null) shapeDrawer.line(scaledPosition, scaledPosition + velocity.v * drawScale / 10f, Color.RED, 10f * planetScale)
         }
     }
 }

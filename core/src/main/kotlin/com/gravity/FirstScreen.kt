@@ -7,20 +7,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.gravity.ecs.components.*
-import com.gravity.ecs.systems.CameraFollowAnEntitySystem
 import com.gravity.injection.Context.inject
 import com.gravity.injection.GameConstants
 import com.gravity.injection.GameConstants.MAX_MASS
 import com.gravity.injection.GameConstants.MIN_MASS
+import com.gravity.injection.GameConstants.drawScale
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.ashley.entity
-import ktx.ashley.getSystem
 import ktx.ashley.with
 import ktx.math.random
 
-class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter {
+class FirstScreen(private val addBigOnes: Boolean, private val addSun: Boolean, private val velRange: ClosedFloatingPointRange<Float>, private val distanceRange: ClosedFloatingPointRange<Float>) : KtxScreen, KtxInputAdapter {
     private val engine by lazy { inject<Engine>() }
     private val camera by lazy { inject<OrthographicCamera>() }
     private val viewPort by lazy { inject<ExtendViewport>() }
@@ -28,7 +27,7 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
     private val zoomFactor = 0.05f
 
     private val drawScaleFactor = 1f
-    private var drawScale = 0f
+    private var drawScaleValue = 0f
 
     private val planetScaleFactor = 10f
     private var planetScale = 0f
@@ -46,11 +45,11 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
                 true
             }
             Input.Keys.UP -> {
-                drawScale = 1f
+                drawScaleValue = 1f
                 true
             }
             Input.Keys.DOWN -> {
-                drawScale = -1f
+                drawScaleValue = -1f
                 true
             }
             Input.Keys.W -> {
@@ -90,11 +89,11 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
                 true
             }
             Input.Keys.UP -> {
-                drawScale = 0f
+                drawScaleValue = 0f
                 true
             }
             Input.Keys.DOWN -> {
-                drawScale = 0f
+                drawScaleValue = 0f
                 true
             }
             Input.Keys.W -> {
@@ -105,6 +104,7 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
                 planetScale = 0f
                 true
             }
+            Input.Keys.SPACE -> togglePause()
             else -> {
                 false
             }
@@ -113,20 +113,17 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
 
     override fun show() {
         Gdx.input.inputProcessor = this
-        viewPort.minWorldWidth = 60000f
-        viewPort.minWorldHeight = 40000f
         /*
         add some entities, my man!
          */
-        val distanceRange = 100000f..1000000f
         val angleRange = 0f..359f
+        var largestDistance = 0f
 
-        val xRange = -150000f..150000f
-        val yRange = -100000f..100000f
-        val velRange = 30000000f..50000000f
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..750) {
+        for (i in 0..1500) {
             val distance = distanceRange.random()
+            if(distance > largestDistance)
+                largestDistance = distance
             val p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
             val m = massRange.random()
             val uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * velRange.random())
@@ -148,8 +145,10 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
             }
         }
 
-        if(addBigOnes) {
+        if (addBigOnes) {
             var distance = distanceRange.random()
+            if(distance > largestDistance)
+                largestDistance = distance
             var p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
             var uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * velRange.random())
 
@@ -169,6 +168,8 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
                 }
             }
             distance = distanceRange.random()
+            if(distance > largestDistance)
+                largestDistance = distance
             p = Vector2.X.cpy().rotateDeg(angleRange.random()).scl(distance)
             uV = Vector2.Zero.cpy().sub(p).nor().rotate90(-1).scl((1f / distance) * velRange.random())
             engine.entity {
@@ -186,6 +187,8 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
                     points.forEach { it.set(p) }
                 }
             }
+        }
+        if (addSun) {
             engine.entity {
                 with<Mass> {
                     mass = MAX_MASS * 100000f
@@ -198,13 +201,23 @@ class FirstScreen(private val addBigOnes: Boolean) : KtxScreen, KtxInputAdapter 
             }
         }
         inject<KeepTrackOfFatties>().trackTheFattest()
+        viewPort.minWorldWidth = largestDistance * 2 / drawScale
+        viewPort.minWorldHeight = largestDistance * 2 / drawScale
+        togglePause()
+    }
+
+    private fun togglePause(): Boolean {
+        for (system in engine.systems) {
+            system.setProcessing(!system.checkProcessing())
+        }
+        return true
     }
 
     override fun render(delta: Float) {
         clearScreen(red = 0.7f, green = 0.7f, blue = 0.7f)
         engine.update(delta)
         camera.zoom += zoomFactor * cameraZoom
-        GameConstants.drawScale += drawScale * drawScaleFactor
+        GameConstants.drawScale += drawScaleValue * drawScaleFactor
         GameConstants.planetScale += planetScale * planetScaleFactor
     }
 
