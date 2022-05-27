@@ -9,7 +9,7 @@ class MainGame : KtxGame<KtxScreen>() {
         KtxAsync.initiate()
 
         //30000000f..50000000f
-        addScreen(FirstScreen(addBigOnes = false, addSun = false, 0f..0f, 10000f..1000000f))
+        addScreen(FirstScreen(addBigOnes = true, addSun = true, 25000000f..35000000f, 10000f..1000000f,500))
         setScreen<FirstScreen>()
     }
 }

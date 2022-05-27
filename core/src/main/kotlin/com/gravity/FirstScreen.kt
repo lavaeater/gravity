@@ -19,7 +19,13 @@ import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.math.random
 
-class FirstScreen(private val addBigOnes: Boolean, private val addSun: Boolean, private val velRange: ClosedFloatingPointRange<Float>, private val distanceRange: ClosedFloatingPointRange<Float>) : KtxScreen, KtxInputAdapter {
+class FirstScreen(
+    private val addBigOnes: Boolean,
+    private val addSun: Boolean,
+    private val velRange: ClosedFloatingPointRange<Float>,
+    private val distanceRange: ClosedFloatingPointRange<Float>,
+    private val numberOfBodies: Int
+) : KtxScreen, KtxInputAdapter {
     private val engine by lazy { inject<Engine>() }
     private val camera by lazy { inject<OrthographicCamera>() }
     private val viewPort by lazy { inject<ExtendViewport>() }
@@ -120,7 +126,7 @@ class FirstScreen(private val addBigOnes: Boolean, private val addSun: Boolean, 
         var largestDistance = 0f
 
         val massRange = MIN_MASS..MAX_MASS
-        for (i in 0..1500) {
+        for (i in 0..numberOfBodies) {
             val distance = distanceRange.random()
             if(distance > largestDistance)
                 largestDistance = distance
