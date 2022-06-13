@@ -1,7 +1,0 @@
-eclipse.project.name = appName + '-shared'
-
-dependencies {
-	implementation "com.github.MrStahlfelge.gdx-websockets:core:$websocketVersion"
-	implementation "com.github.MrStahlfelge.gdx-websockets:serialization:$websocketSerializationVersion"
-	implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-}
