@@ -64,10 +64,10 @@ features = [
 
     # Development/Debug features:
     "dynamic",      # Dynamic linking for faster compile-times
-    "trace",        # Enable tracing for performance measurement
-    "trace_tracy",  # Tracing using `tracy`
-    "trace_chrome", # Tracing using the Chrome format
-    "wgpu_trace",   # WGPU/rendering tracing
+#    "trace",        # Enable tracing for performance measurement
+#    "trace_tracy",  # Tracing using `tracy`
+#    "trace_chrome", # Tracing using the Chrome format
+#    "wgpu_trace",   # WGPU/rendering tracing
 ]
 
 

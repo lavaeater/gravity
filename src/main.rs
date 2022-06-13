@@ -1,4 +1,3 @@
-use std::simd::StdFloat;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
@@ -34,11 +33,3 @@ struct Planet;
 
 #[derive(Component)]
 struct Mass(f64);
-
-#[derive(Component)]
-struct Transform {
-    x: f64,
-    y: f64
-}
-
-struct
