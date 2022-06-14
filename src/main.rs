@@ -33,3 +33,4 @@ struct Planet;
 
 #[derive(Component)]
 struct Mass(f64);
+
